@@ -11,6 +11,9 @@ public class UserDto {
         this.login = login;
     }
 
+    public UserDto() {
+    }
+
     public Long getId() {
         return id;
     }

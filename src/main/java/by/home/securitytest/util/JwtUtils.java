@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,12 +34,12 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.ES256);
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         Date expires = Date.from(LocalDateTime.now().plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant());
         return Jwts.builder()
                 .setSubject("sub")
                 .addClaims(Map.of("login", userDetails.getUsername()))
-                .signWith(key, SignatureAlgorithm.ES256)
+                .signWith(key)
                 .setExpiration(expires)
                 .setIssuedAt(new Date())
                 .compact();

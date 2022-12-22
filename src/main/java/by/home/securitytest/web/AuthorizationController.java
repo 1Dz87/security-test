@@ -13,7 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,14 +27,14 @@ public class AuthorizationController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authManager;
 
     private final JwtUtils jwtUtils;
 
-    public AuthorizationController(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthorizationController(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authManager, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
+        this.authManager = authManager;
         this.jwtUtils = jwtUtils;
     }
 
@@ -48,7 +47,7 @@ public class AuthorizationController {
     @PostMapping("login")
     public ResponseEntity<UserDto> login(@RequestBody AuthRequest request) {
         try {
-            Authentication authenticate = authenticationManager
+            Authentication authenticate = authManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     request.getLogin(), request.getPassword()
