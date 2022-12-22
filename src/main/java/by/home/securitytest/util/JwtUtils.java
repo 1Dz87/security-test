@@ -24,7 +24,7 @@ public class JwtUtils {
     private String secret;
 
     public Claims getClaims(final String token) {
-        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.ES256);
+        SecretKey key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         return Jwts.parserBuilder()
                 .requireSubject("sub")
                 .setSigningKey(key)
